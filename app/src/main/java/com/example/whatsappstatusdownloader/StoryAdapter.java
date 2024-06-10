@@ -58,7 +58,8 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
         holder.downloadID.setOnClickListener(v -> {
             checkFolder();
 
-            final String path = file.getPath();
+            final String path;
+            path = file.getPath();
             final File sourceFile = new File(path);
 
             String destPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Constant.SAVE_FOLDER_NAME;
