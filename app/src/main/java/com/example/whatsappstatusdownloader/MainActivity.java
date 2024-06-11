@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         File targetDirector = new File(targetPath);
 
         if (!targetDirector.exists()) {
-            targetPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
+            targetPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
             targetDirector = new File(targetPath);
         }
 
