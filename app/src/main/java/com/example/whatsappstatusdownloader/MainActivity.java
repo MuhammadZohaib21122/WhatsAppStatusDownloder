@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.DocumentsContract;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -43,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);//  Remove Status bar
+
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);  // hide mobile key button
+
         initViews();
         if (isFirstLaunch()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/searchbar_scrolling_view_behavior"
-    android:background="#B1A0A0"
+    android:background="@drawable/background_ww"
     tools:context=".MainActivity">
 
    <androidx.recyclerview.widget.RecyclerView
