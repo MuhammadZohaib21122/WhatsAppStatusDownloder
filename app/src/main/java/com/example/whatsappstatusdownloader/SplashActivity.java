@@ -24,7 +24,6 @@ public class SplashActivity extends AppCompatActivity {
 
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);  // hide mobile key button
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

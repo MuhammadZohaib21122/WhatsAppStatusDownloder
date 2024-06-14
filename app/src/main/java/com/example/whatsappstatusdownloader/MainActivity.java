@@ -40,15 +40,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StoryModel> filesList = new ArrayList<>();
     private static final String PREFS_NAME = "MyAppPreferences";
     private static final String KEY_FIRST_LAUNCH = "firstLaunch";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//  Remove Status bar
-
-
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);  // hide mobile key button
 
         initViews();
@@ -84,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return preferences.getBoolean(KEY_FIRST_LAUNCH, true);
     }
-
     private void initViews() {
         recyclerView = findViewById(R.id.recycler_view);
         swipeRefreshLayout = findViewById(R.id.swipeRecyclerView);
