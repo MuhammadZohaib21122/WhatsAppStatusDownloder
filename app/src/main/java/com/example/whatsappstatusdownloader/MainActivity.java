@@ -2,6 +2,7 @@ package com.example.whatsappstatusdownloader;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,6 +18,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.DocumentsContract;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -106,39 +109,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<StoryModel> getData() {
-        String targetPath = Environment.getExternalStorageDirectory().getAbsolutePath() + Constant.FOLDER_NAME + "Media/.Statuses";
-        File targetDirector = new File(targetPath);
+        ArrayList<StoryModel> filesList = new ArrayList<>();
 
-        if (!targetDirector.exists()) {
-            targetPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
-            targetDirector = new File(targetPath);
-        }
+        String[] possiblePaths = {
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/WhatsApp/Media/.Statuses",
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses"
+        };
 
-        if (targetDirector.exists() && targetDirector.isDirectory()) {
-            files = targetDirector.listFiles();
+        for (String targetPath : possiblePaths) {
+            File targetDirector = new File(targetPath);
 
-            if (files != null) {
-                for (File file : files) {
-                    if (!file.getName().endsWith(".media")) {
-                        StoryModel story = new StoryModel();
-                        story.setUri(Uri.fromFile(file));
-                        story.setPath(file.getAbsolutePath());
-                        story.setFilename(file.getName());
-                        filesList.add(story);
+            if (targetDirector.exists() && targetDirector.isDirectory()) {
+                Log.d("StatusDirectory", "Directory exists: " + targetPath);
+                File[] files = targetDirector.listFiles();
+
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isFile() && !file.getName().endsWith(".nomedia")) {
+                            StoryModel story = new StoryModel();
+                            story.setUri(Uri.fromFile(file));
+                            story.setPath(file.getAbsolutePath());
+                            story.setFilename(file.getName());
+                            filesList.add(story);
+                        }
                     }
+                } else {
+                    Log.d("StatusDirectory", "No files found in: " + targetPath);
                 }
+            } else {
+                Log.d("StatusDirectory", "Directory does not exist: " + targetPath);
             }
         }
 
-        Toast.makeText(this, "Size = " + filesList.size(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Statuses found: " + filesList.size(), Toast.LENGTH_SHORT).show();
         return filesList;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void checkWhatsAppPermission() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        Uri wa_status_uri = Uri.parse("content://com.android.external storage.documents/tree/primary%3AAndroid%2Media%2From.whatsapp%2FWhatsApp%2FMedia%2F.Statuses");
-        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, wa_status_uri);
-        startActivityForResult(intent, 10001);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Request MANAGE_EXTERNAL_STORAGE permission for Android 11 and above
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 10001);
+        } else {
+            // For Android 10, use ACTION_OPEN_DOCUMENT_TREE
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            Uri waStatusUri = Uri.parse("content://com.android.externalstorage.documents/tree/primary%3AAndroid%2Fmedia%2Fcom.whatsapp%2FWhatsApp%2FMedia%2F.Statuses");
+            intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, waStatusUri);
+            startActivityForResult(intent, 10001);
+        }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10001) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                Log.d("Permission", "Uri: " + uri.toString());
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("Permission", "Permission not granted");
+                Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
