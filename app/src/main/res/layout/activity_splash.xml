@@ -4,11 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+    tools:context=".SplashActivity"
+    android:background="@drawable/background_ww">
+
+    <TextView
+        android:layout_width="407dp"
+        android:layout_height="53dp"
+        android:text="Status Downloader"
+        android:textAlignment="center"
+        android:textColor="#F3AF49"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/splashImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.307"
+        tools:ignore="MissingConstraints,SmallSp" />
+
     <ImageView
         android:id="@+id/splashImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="665dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/splash_image" />
+        android:src="@drawable/splash_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
